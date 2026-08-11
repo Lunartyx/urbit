@@ -13,10 +13,7 @@ const reasons = [
 export function Stats() {
   return (
     <section className="relative overflow-hidden py-24 md:py-32">
-      <Parallax speed={0.4} className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-screen" style={{ backgroundImage: "url(/purple-wave.png)" }} />
-      </Parallax>
-      <div className="absolute inset-0 -z-10 bg-background/45" />
+
 
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="mb-12 max-w-2xl">

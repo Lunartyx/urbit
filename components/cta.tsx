@@ -7,9 +7,6 @@ import { Parallax } from "./parallax"
 export function CTA() {
   return (
     <section id="kontakt" className="relative overflow-hidden py-32 md:py-44">
-      <Parallax speed={0.45} className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2">
-        <div className="h-[34rem] w-[34rem] rounded-full bg-primary/30 blur-[150px]" />
-      </Parallax>
       <div className="mx-auto max-w-4xl px-5 text-center md:px-8">
         <Parallax speed={0.18}>
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">Nächster Schritt</p>

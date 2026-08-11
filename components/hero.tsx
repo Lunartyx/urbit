@@ -17,13 +17,6 @@ export function Hero() {
         <div className="h-[30rem] w-[30rem] rounded-full bg-primary/35 blur-[130px]" />
       </Parallax>
 
-      <Parallax speed={0.32} scale={0.18} className="pointer-events-none absolute inset-0 z-0">
-        <div
-          className="orb-mask absolute right-[-16%] top-[-6%] h-[135%] w-[88%] bg-contain bg-right bg-no-repeat opacity-90 mix-blend-screen"
-          style={{ backgroundImage: "url(/aurora-orb.png)" }}
-        />
-      </Parallax>
-
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-8">
         <Parallax speed={0.08} className="max-w-3xl">
           <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-primary">
