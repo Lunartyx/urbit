@@ -1,54 +1,96 @@
-import type { Metadata } from "next"
-import { Clock, Languages, Mail, MapPin, Phone, Radio } from "lucide-react"
-import { PageIntro } from "@/components/page-intro"
+import { ArrowUpRight } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
+import { enquiryConfig } from "@/lib/enquiry/server"
+import { CopyEmail } from "@/components/copy-email"
+import { PageIntro } from "@/components/page-intro"
+import { site, pageMetadata } from "@/lib/site"
 
-export const metadata: Metadata = {
-  title: "Kontakt — Urbanetz Tech Consulting",
-  description: "Kontaktieren Sie Urbanetz Tech Consulting für Ihr Website-, Hosting-, E-Mail-, Automatisierungs- oder Infrastrukturprojekt.",
-}
+export const metadata = pageMetadata(
+  "Kontakt",
+  "Besprechen Sie Ihr IT-Projekt direkt mit Dominik Urbanetz. Kostenloses, unverbindliches Erstgespräch per E-Mail oder Telefon anfragen.",
+  "/kontakt",
+)
 
-const details = [
-  { icon: Mail, label: "E-Mail", value: "kontakt@dominikurbanetz.ch", href: "mailto:kontakt@dominikurbanetz.ch" },
-  { icon: Phone, label: "Telefon", value: "+41 77 463 23 90", href: "tel:+41774632390" },
-  { icon: Clock, label: "Antwortzeit", value: "In der Regel innerhalb von 1–2 Werktagen" },
-  { icon: Languages, label: "Sprachen", value: "Deutsch und Englisch" },
-  { icon: MapPin, label: "Standort", value: "Zürich, Schweiz" },
-  { icon: Radio, label: "Remote Support", value: "Schweizweit möglich" },
-]
+export const dynamic = "force-dynamic"
 
 export default function KontaktPage() {
   return (
     <>
-      <PageIntro eyebrow="Kontakt" title={<>Lassen Sie uns über Ihr Projekt sprechen.</>}>
-        Schreiben Sie mir ein paar Zeilen zu Ihrem Anliegen. Das erste Gespräch ist kostenlos und unverbindlich — Kosten, Umfang und ein realistischer Zeitrahmen werden dort gemeinsam besprochen.
+      <PageIntro
+        eyebrow="Kontakt"
+        title={
+          <>
+            Eine Idee. Eine Frage.
+            <br />
+            Lassen Sie uns sprechen.
+          </>
+        }
+      >
+        Eine kurze Beschreibung genügt. Im kostenlosen Erstgespräch klären wir Ihr Anliegen, den
+        passenden Umfang und die nächsten Schritte.
       </PageIntro>
-      <section className="mx-auto max-w-7xl px-5 pb-28 md:px-8 md:pb-40">
-        <div className="grid gap-8 md:grid-cols-[0.85fr_1.2fr] md:gap-12">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Kontaktinformationen</h2>
-            <div className="mt-6 flex flex-col gap-4">
-              {details.map((detail) => (
-                <div key={detail.label} className="glass flex items-center gap-4 rounded-2xl p-6">
-                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-primary/20 bg-primary/10 text-primary"><detail.icon className="h-5 w-5" /></div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{detail.label}</p>
-                    {"href" in detail ? (
-                      <a href={detail.href} className="mt-1 inline-block font-medium text-foreground transition-colors hover:text-primary">
-                        {detail.value}
-                      </a>
-                    ) : (
-                      <p className="mt-1 font-medium text-foreground">{detail.value}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
+      <section className="container contact-layout" aria-label="Kontaktmöglichkeiten">
+        <div className="contact-primary">
+          <h2>Schreiben Sie mir.</h2>
+          <p>Was möchten Sie umsetzen oder verbessern?</p>
+          <a href={`mailto:${site.email}`} className="contact-email">
+            {site.email}
+          </a>
+          <a
+            href={`mailto:${site.email}?subject=${encodeURIComponent("Projektanfrage über Urbit")}`}
+            className="button"
+          >
+            E-Mail schreiben <ArrowUpRight size={18} aria-hidden="true" />
+          </a>
+          <p className="contact-hint">
+            Öffnet Ihr E-Mail-Programm. Sie können die Adresse auch in Ihr Webmail kopieren.
+          </p>
+          <CopyEmail email={site.email} />
+        </div>
+        <div className="contact-secondary">
+          <h2>Lieber persönlich besprechen?</h2>
+          <a href={site.phoneHref} className="contact-phone">
+            {site.phone}
+          </a>
+          <dl className="contact-facts">
+            <div>
+              <dt>Rückmeldung auf Ihre Anfrage</dt>
+              <dd>In der Regel innerhalb von 1–2 Werktagen</dd>
             </div>
-            <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-              Für eine erste Einschätzung genügen ein paar Stichworte. Technische Details können wir gemeinsam klären. Ob es um ein vollständiges IT-Setup oder nur um wenige E-Mail-Adressen geht: Der passende Aufwand richtet sich nach dem Ergebnis, das Sie erreichen möchten.
-            </p>
-          </div>
-          <ContactForm />
+            <div>
+              <dt>Standort & Zusammenarbeit</dt>
+              <dd>8156 Oberhasli, Schweiz. Remote schweizweit.</dd>
+            </div>
+            <div>
+              <dt>Sprachen</dt>
+              <dd>Deutsch und Englisch</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+      {(enquiryConfig() ||
+        (process.env.NODE_ENV === "development" &&
+          process.env.ENQUIRY_FORM_PREVIEW === "true")) && <ContactForm />}
+      <section className="container enquiry-next" aria-labelledby="enquiry-next-title">
+        <h2 id="enquiry-next-title">So geht es nach Ihrer Anfrage weiter.</h2>
+        <p>
+          Ich schaue mir Ihr Anliegen an und kläre offene Fragen mit Ihnen. Im kostenlosen
+          Erstgespräch besprechen wir, welche Unterstützung sinnvoll ist. Vor der Umsetzung
+          vereinbaren wir Umfang, Kosten und Zeitplan.
+        </p>
+        <p>
+          Sie müssen noch keine technischen Details kennen. Bitte schicken Sie keine Passwörter oder
+          vertraulichen Kundendaten mit Ihrer ersten Nachricht.
+        </p>
+      </section>
+      <section className="light-section">
+        <div className="container contact-help">
+          <h2>Das hilft für eine erste Einschätzung.</h2>
+          <ul>
+            <li>Was möchten Sie erreichen, oder welches Problem gibt es?</li>
+            <li>Welche Website oder Systeme nutzen Sie bereits?</li>
+            <li>Gibt es einen gewünschten Termin oder einen Budgetrahmen?</li>
+          </ul>
         </div>
       </section>
     </>

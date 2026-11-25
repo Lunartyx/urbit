@@ -1,0 +1,8 @@
+{
+  "reviewed": false,
+  "hosting": "Geplant: Microsoft Azure, bevorzugt Switzerland North. Konkreter Dienst und tatsächliche Verarbeitungsorte noch zu bestätigen.",
+  "email": "Der tatsächlich eingesetzte E-Mail-Dienst und seine Verarbeitungsorte sind vor Veröffentlichung zu ergänzen.",
+  "abuseProtection": "Bei aktiviertem Formular: kurzlebige Prüftoken und pseudonymisierte Versandlimits. Der eingesetzte Redis-Dienst und seine Verarbeitungsorte sind noch zu bestätigen.",
+  "retention": "Die tatsächlichen Aufbewahrungsfristen für Anfragen, Postfach, Serverprotokolle und Sicherungen sind vor Veröffentlichung festzulegen.",
+  "internationalTransfers": "Verarbeitungsorte, Unterauftragnehmer und gegebenenfalls erforderliche Schutzmassnahmen sind anhand der tatsächlichen Verträge zu prüfen. Eine ausschliessliche Verarbeitung in der Schweiz wird nicht zugesichert."
+}

@@ -1,51 +1,44 @@
-"use client"
-
-import { Parallax } from "./parallax"
-
 const steps = [
   {
-    no: "01",
-    title: "Analyse",
-    desc: "Ich verstehe zuerst das Geschäft, nicht nur das Backlog. Fundierte Audits von Architektur, Team und Rahmenbedingungen.",
+    title: "Besprechen",
+    text: "Sie schildern Ihr Anliegen. Wir klären, was Sie brauchen und welche Lösung sinnvoll ist.",
   },
   {
-    no: "02",
-    title: "Konzept",
-    desc: "Ein pragmatischer Bauplan mit klaren Trade-offs – schrittweise umsetzbar und vom ersten Tag an risikoarm.",
+    title: "Umsetzen",
+    text: "Sie erhalten einen vereinbarten Umfang, Kosten und Zeitplan. Ich setze die Lösung um und stimme mich mit Ihnen ab.",
   },
   {
-    no: "03",
-    title: "Umsetzung",
-    desc: "Entwicklung in engen Iterationen, an Ihrer Seite – mit Qualität und Observability von Beginn an eingebaut.",
-  },
-  {
-    no: "04",
-    title: "Skalierung",
-    desc: "Ich härte ab, automatisiere und übergebe – Ihr Team besitzt am Ende ein System, das es vollständig versteht.",
+    title: "Weiterbetreuen",
+    text: "Sie erhalten eine dokumentierte Übergabe. Auf Wunsch bleibe ich für Betrieb und Unterstützung an Ihrer Seite.",
   },
 ]
 
 export function Approach() {
   return (
-    <section id="ablauf" className="relative mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-      <Parallax speed={0.12} className="max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">Wie ich arbeite</p>
-        <h2 className="mt-5 text-balance text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
-          Eine Methode, die aus Komplexität Tempo macht.
-        </h2>
-      </Parallax>
-
-      <div className="mt-16 grid gap-px overflow-hidden rounded-3xl border border-primary/15 bg-primary/10 md:grid-cols-2 lg:grid-cols-4">
-        {steps.map((s, i) => (
-          <Parallax key={s.no} speed={0.08 + i * 0.06} className="glass-strong">
-            <div className="flex h-full flex-col gap-6 p-8">
-              <span className="text-sm font-medium text-primary">{s.no}</span>
-              <h3 className="text-2xl font-semibold tracking-tight">{s.title}</h3>
-              <p className="leading-relaxed text-muted-foreground">{s.desc}</p>
-            </div>
-          </Parallax>
-        ))}
+    <section className="container section-space">
+      <div className="section-heading">
+        <div>
+          <p className="section-label">Zusammenarbeit</p>
+          <h2>
+            Von der Frage
+            <br />
+            zur laufenden Lösung.
+          </h2>
+        </div>
+        <p>
+          Sie sprechen mit der Person, die Ihr Projekt plant und umsetzt. Ohne wechselnde
+          Zuständigkeiten.
+        </p>
       </div>
+      <ol className="process-grid">
+        {steps.map((step, i) => (
+          <li key={step.title}>
+            <span className="step-number">0{i + 1}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))}
+      </ol>
     </section>
   )
 }

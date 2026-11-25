@@ -1,0 +1,28 @@
+{
+  "heading": "Kosten passend zu Ihrem Vorhaben.",
+  "introduction": "Jedes Vorhaben ist anders. Sie erhalten eine individuelle Offerte auf Basis des vereinbarten Umfangs. Das Erstgespräch ist kostenlos und unverbindlich.",
+  "offers": [
+    {
+      "serviceId": "webseiten",
+      "name": "Webseiten",
+      "price": "Individuelle Offerte",
+      "basis": "Je nach Seitenumfang, Inhalten und Funktionen.",
+      "additionalCosts": "Domain, Hosting und laufende Betreuung werden separat geklärt."
+    },
+    {
+      "serviceId": "business-e-mail",
+      "name": "Business E-Mail",
+      "price": "Nach Umfang",
+      "basis": "Je nach Konten, Geräten und Übernahme bestehender Nachrichten.",
+      "additionalCosts": "Softwarelizenzen und Einrichtung werden getrennt ausgewiesen."
+    },
+    {
+      "serviceId": "hosting",
+      "name": "Hosting & Betreuung",
+      "price": "Nach Vereinbarung",
+      "basis": "Abhängig von Diensten, Wartungsaufgaben und gewünschter Unterstützung.",
+      "additionalCosts": "Hostingkosten und persönliche Betreuung werden im Angebot unterschieden."
+    }
+  ],
+  "note": "Verbindlich ist die individuelle Offerte. Zusätzliche Leistungen und laufende Kosten werden vor der Umsetzung besprochen."
+}

@@ -1,47 +1,142 @@
-import type { ReactNode } from "react"
-import { Mail, Send } from "lucide-react"
+"use client"
+
+import Link from "next/link"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 
 export function ContactForm() {
+  const [token, setToken] = useState("")
+  const [busy, setBusy] = useState(false)
+  const [status, setStatus] = useState("")
+  const [failed, setFailed] = useState(false)
+  const feedback = useRef<HTMLParagraphElement>(null)
+  async function refreshToken() {
+    try {
+      const response = await fetch("/api/enquiry/token", { cache: "no-store" })
+      if (!response.ok) throw new Error()
+      const data = await response.json()
+      setToken(data.token)
+    } catch {
+      setToken("")
+      setFailed(true)
+      setStatus("Das Formular ist momentan nicht verfügbar. Bitte nutzen Sie E-Mail oder Telefon.")
+    }
+  }
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch("/api/enquiry/token", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error()
+        return response.json()
+      })
+      .then((data) => setToken(data.token))
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setFailed(true)
+          setStatus(
+            "Das Formular ist momentan nicht verfügbar. Bitte nutzen Sie E-Mail oder Telefon.",
+          )
+        }
+      })
+    return () => controller.abort()
+  }, [])
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (busy || !token) return
+    const form = event.currentTarget
+    setBusy(true)
+    setStatus("")
+    const fields = Object.fromEntries(new FormData(form))
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...fields, token }),
+      })
+      const data = await response.json()
+      setFailed(!response.ok)
+      setStatus(data.message)
+      if (response.ok) form.reset()
+    } catch {
+      setFailed(true)
+      setStatus(
+        "Die Versandbestätigung fehlt. Ihre Eingaben bleiben erhalten. Bitte nutzen Sie E-Mail oder Telefon.",
+      )
+    } finally {
+      setBusy(false)
+      await refreshToken()
+      requestAnimationFrame(() => feedback.current?.focus())
+    }
+  }
   return (
-    <form className="glass-strong flex flex-col gap-5 rounded-3xl p-7 md:p-9">
-      <div id="contact-form-status" className="flex gap-3 rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm leading-relaxed text-muted-foreground">
-        <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-        <p>
-          Das Kontaktformular wird aktuell vorbereitet. Bitte nutzen Sie bis dahin direkt{" "}
-          <a href="mailto:kontakt@dominikurbanetz.ch" className="font-medium text-foreground transition-colors hover:text-primary">
-            kontakt@dominikurbanetz.ch
-          </a>
-          {" "}oder rufen Sie mich an.
+    <section className="container enquiry-next" aria-labelledby="form-title">
+      <h2 id="form-title">Ihr Anliegen direkt senden.</h2>
+      <p>
+        Pflichtfelder sind mit * markiert. Bitte keine Passwörter oder vertraulichen Kundendaten
+        senden.
+      </p>
+      <form className="enquiry-form" onSubmit={submit} aria-busy={busy}>
+        <label htmlFor="enquiry-name">
+          Name *
+          <input
+            id="enquiry-name"
+            name="name"
+            autoComplete="name"
+            required
+            minLength={2}
+            maxLength={100}
+          />
+        </label>
+        <label htmlFor="enquiry-email">
+          E-Mail *
+          <input
+            id="enquiry-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            maxLength={254}
+          />
+        </label>
+        <label htmlFor="enquiry-company">
+          Firma (optional)
+          <input id="enquiry-company" name="company" autoComplete="organization" maxLength={150} />
+        </label>
+        <label htmlFor="enquiry-message">
+          Ihr Anliegen *
+          <textarea
+            id="enquiry-message"
+            name="message"
+            required
+            minLength={20}
+            maxLength={5000}
+            rows={6}
+            aria-describedby="message-help"
+          />
+        </label>
+        <p id="message-help">
+          20–5000 Zeichen. Was möchten Sie erreichen? Ein gewünschter Termin oder Budgetrahmen
+          hilft, ist aber nicht nötig.
         </p>
-      </div>
-
-      <fieldset disabled aria-describedby="contact-form-status" className="contents">
-        <Field label="Name" htmlFor="name">
-          <input id="name" name="name" type="text" autoComplete="name" placeholder="Ihr Name" className="form-control" />
-        </Field>
-        <Field label="Firma / Projekt" htmlFor="company">
-          <input id="company" name="company" type="text" autoComplete="organization" placeholder="Firma oder Projektname" className="form-control" />
-        </Field>
-        <Field label="E-Mail" htmlFor="email">
-          <input id="email" name="email" type="email" autoComplete="email" placeholder="name@beispiel.ch" className="form-control" />
-        </Field>
-        <Field label="Nachricht" htmlFor="message">
-          <textarea id="message" name="message" rows={6} placeholder="Worum geht es? Beschreiben Sie kurz Ihr Vorhaben." className="form-control resize-y" />
-        </Field>
-        <button type="button" disabled className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_0_30px_-6px_var(--color-primary)] opacity-60">
-          Formular bald verfügbar
-          <Send className="h-4 w-4" />
+        <div hidden aria-hidden="true">
+          <label>
+            Website
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
+        <p>
+          Ihre Angaben werden zur Bearbeitung Ihrer Anfrage verwendet. Mehr dazu im{" "}
+          <Link href="/datenschutz" className="text-link">
+            Datenschutz
+          </Link>
+          .
+        </p>
+        <button className="button" type="submit" disabled={busy || !token}>
+          {busy ? "Wird gesendet …" : "Anfrage senden"}
         </button>
-      </fieldset>
-    </form>
-  )
-}
-
-function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={htmlFor} className="text-sm font-medium text-foreground">{label}</label>
-      {children}
-    </div>
+        <p ref={feedback} tabIndex={-1} role={failed ? "alert" : "status"}>
+          {status}
+        </p>
+      </form>
+    </section>
   )
 }
