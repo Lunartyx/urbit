@@ -1,4 +1,25 @@
-# Azure deployment
+# Deployment
+
+## Portainer Git repository deployment (Docker Standalone)
+
+In the Prod environment, open **Stacks → Add stack → Repository** and enter:
+
+- Name: `urbit`
+- Repository URL: `https://github.com/Lunartyx/urbit`
+- Repository reference: `refs/heads/main`
+- Compose path: `portainer-stack.yml`
+- Authentication: off for this public repository
+- Optional environment variable: `HTTP_PORT` (defaults to `3000`; choose an unused host port)
+
+Deploy the stack. Portainer clones the repository and builds the Dockerfile on the server. This setup requires Docker Standalone; Swarm requires a prebuilt registry image instead.
+
+Check that the web container becomes healthy, then open `http://SERVER_IP:3000/api/health` and the homepage (adjust the port if changed). Point the domain's HTTPS reverse proxy at the published host port. The contact form remains disabled until the activation procedure below is complete.
+
+To update, push changes to `main`, then use Portainer's repository update/redeploy action. Inspect build output if deployment fails. Retain the previous release for rollback.
+
+Reference: [Portainer repository stacks](https://docs.portainer.io/user/docker/stacks/add#option-3-git-repository).
+
+## Azure deployment
 
 Prepared for a Linux container on Azure App Service. No resources have been created. Confirm service, SKU, registry, mail and Redis availability in Switzerland North before choosing them. The region preference is not a promise about every processing location.
 
